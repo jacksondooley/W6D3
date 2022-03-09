@@ -4,7 +4,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    render json: params
+    @user = User.create(user_params)
+    if @user.save
+      redirect_to users_post(@user)
+    else
+      @user.errors.full_messages
+    end
   end
 
   def show
@@ -35,4 +40,10 @@ class UsersController < ApplicationController
     @user.destroy
     redirect_to users_url(@user)
   end
+
+  private
+  def user_params
+    params.require(:user).permit(:username)
+  end
+
 end
